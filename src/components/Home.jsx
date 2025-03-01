@@ -9,7 +9,7 @@ const Home = () => {
                 <ul>
                     <li><Link to="/register-voter">Register Voter</Link></li>
                     <li><Link to="/cast-vote">Cast Vote</Link></li>
-                    <li><Link to="/results">Results</Link></li>
+      a              <li><Link to="/results">Results</Link></li>
                     <li><Link to="/register-candidate">Register Candidate</Link></li>
                     <li><Link to="/set-voting-period">Set Voting Period</Link></li>
                     <li><Link to="/emergency-stop">Emergency Stop</Link></li>
