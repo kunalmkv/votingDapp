@@ -2,14 +2,19 @@ import React from "react";
 
 const WithdrawFunds = ({ contract }) => {
     const handleWithdraw = async () => {
-        try {
-            await contract.withdrawFunds();
-            alert("Funds withdrawn successfully!");
-        } catch (error) {
-            console.error(error);
-            alert("Failed to withdraw funds");
+        if (!contract) return alert("Connect wallet first.");
+        if (window.confirm("Are you sure you want to withdraw funds?")) {
+            try {
+                const tx = await contract.withdrawFunds();
+                await tx.wait();
+                alert("Funds withdrawn successfully!");
+            } catch (error) {
+                console.error(error);
+                alert("Failed to withdraw funds");
+            }
         }
     };
+
 
     return (
         <div>

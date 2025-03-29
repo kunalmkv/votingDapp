@@ -6,14 +6,21 @@ const SetVotingPeriod = ({ contract }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!contract) return alert("Connect wallet first.");
+        if (parseInt(startTime) >= parseInt(endTime)) {
+            alert("End time must be greater than start time");
+            return;
+        }
         try {
-            await contract.setVotingPeriod(parseInt(startTime), parseInt(endTime));
+            const tx = await contract.setVotingPeriod(parseInt(startTime), parseInt(endTime));
+            await tx.wait();
             alert("Voting period set successfully!");
         } catch (error) {
             console.error(error);
             alert("Failed to set voting period");
         }
     };
+
 
     return (
         <form onSubmit={handleSubmit}>

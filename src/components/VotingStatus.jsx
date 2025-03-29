@@ -5,11 +5,21 @@ const VotingStatus = ({ contract }) => {
 
     useEffect(() => {
         const fetchStatus = async () => {
-            const votingStatus = await contract.getVotingStatus();
-            setStatus(votingStatus === 0 ? "Not Started" : votingStatus === 1 ? "Started" : "Stopped");
+            if (!contract)  alert("Connect wallet first.");
+            try {
+                const votingStatus = await contract.getVotingStatus();
+                setStatus(
+                    votingStatus === 0 ? "Not Started" :
+                        votingStatus === 1 ? "Started" :
+                            "Stopped"
+                );
+            } catch (error) {
+                console.error(error);
+            }
         };
         fetchStatus();
     }, [contract]);
+
 
     return (
         <div>
