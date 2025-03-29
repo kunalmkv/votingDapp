@@ -1,21 +1,11 @@
-import React, { useState } from "react";
+// Navbar.jsx
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { web3State } from "../contract";
+import { WalletContext } from "../walletContext.jsx";
 
-const Navbar = ({ setContract, setAccount }) => {
+const Navbar = () => {
+    const { account, connectWallet, disconnectWallet } = useContext(WalletContext);
     const [darkMode, setDarkMode] = useState(false);
-
-    const connectWallet = async () => {
-        try {
-            const { contract, address } = await web3State();
-            setContract(contract);
-            setAccount(address);
-            alert("Wallet Connected Successfully!");
-        } catch (error) {
-            console.error(error);
-            alert("Failed to connect wallet");
-        }
-    };
 
     const toggleDarkMode = () => {
         setDarkMode(!darkMode);
@@ -43,7 +33,14 @@ const Navbar = ({ setContract, setAccount }) => {
                 <li><Link to="/withdraw-funds">💰 Withdraw Funds</Link></li>
             </ul>
             <div className="nav-right">
-                <button onClick={connectWallet}>💳 Connect Wallet</button>
+                {account ? (
+                    <>
+                        <span>Connected: {account.slice(0, 6)}...{account.slice(-4)}</span>
+                        <button onClick={disconnectWallet}>🔌 Disconnect Wallet</button>
+                    </>
+                ) : (
+                    <button onClick={connectWallet}>💳 Connect Wallet</button>
+                )}
                 <span id="dark-mode-toggle" onClick={toggleDarkMode}>
                     {darkMode ? "🌞" : "🌙"}
                 </span>

@@ -5,14 +5,22 @@ const UpdateCandidateLimit = ({ contract }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!contract) return alert("Connect wallet first.");
+        const newLimit = parseInt(limit);
+        if (newLimit <= 0) {
+            alert("Limit must be greater than 0");
+            return;
+        }
         try {
-            await contract.updateCandidateLimit(parseInt(limit));
+            const tx = await contract.updateCandidateLimit(newLimit);
+            await tx.wait();
             alert("Candidate limit updated successfully!");
         } catch (error) {
             console.error(error);
             alert("Failed to update candidate limit");
         }
     };
+
 
     return (
         <form onSubmit={handleSubmit}>
