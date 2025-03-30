@@ -19,11 +19,10 @@ const CandidateList = () => {
 
             try {
                 const candidateList = await contract.getCandidateList();
-                console.log(candidateList, "candidateList***");
                 setCandidates(candidateList);
             } catch (error) {
                 console.error("Error fetching candidates:", error);
-                setError("Failed to fetch candidates. Check the console for details.");
+                setError(error.reason ? `❌ ${error.reason}` : "❌ Failed to fetch candidates. Check the console for details.");
             } finally {
                 setLoading(false);
             }
@@ -32,24 +31,22 @@ const CandidateList = () => {
         fetchCandidates();
     }, [contract]);
 
-    if (error) {
-        return <p>{error}</p>;
-    }
-
-    if (loading) {
-        return <p>Loading candidates...</p>;
-    }
-
     return (
-        <div>
+        <div className="card">
             <h2>Candidate List</h2>
-            {candidates.length === 0 ? (
+
+            {error && <div className="alert alert-danger">{error}</div>}
+            {loading && <div>Loading candidates...</div>}
+
+            {!loading && !error && candidates.length === 0 && (
                 <p>No candidates registered yet.</p>
-            ) : (
+            )}
+
+            {!loading && !error && candidates.length > 0 && (
                 <ul>
                     {candidates.map((candidate, index) => (
                         <li key={index}>
-                            {candidate.name} (Party: {candidate.party}, Votes: {candidate.voteCount.toString()}, address: {candidate.candidateAddress})
+                            {candidate.name} (id: {candidate.candidateId},Party: {candidate.party}, Votes: {candidate.voteCount.toString()}, Address: {candidate.candidateAddress})
                         </li>
                     ))}
                 </ul>

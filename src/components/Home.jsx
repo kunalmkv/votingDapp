@@ -59,7 +59,7 @@ const Home = () => {
                 .home-container {
                     padding: 30px;
                     text-align: center;
-                    background-color: #f5f7fa;
+                    background-color: #ffffff;
                     border-radius: 15px;
                     margin: 40px auto;
                     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -67,31 +67,59 @@ const Home = () => {
                 }
                 .home-title {
                     font-size: 2rem;
-                    color: #333;
+                    color: #1e1e1e;
+                    margin-bottom: 20px;
                 }
                 .commissioner-section, .voter-section {
                     margin-top: 20px;
                     padding: 20px;
-                    background-color: #fff;
+                    background-color: #f0f8ff;
                     border-radius: 10px;
                     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+                    color: #1e1e1e;
+                }
+                .commissioner-section h2, .voter-section h2 {
+                    color: #000080;
+                    margin-bottom: 15px;
+                }
+                .commissioner-section p, .voter-section p {
+                    color: #333;
+                    font-weight: 500;
                 }
                 ul {
                     list-style-type: none;
                     padding: 0;
                     font-size: 1rem;
+                    margin-top: 15px;
                 }
                 li {
                     margin: 8px 0;
                     padding: 8px;
-                    background-color: #e0f0ff;
+                    background-color: #dbe9ff;
                     border-radius: 6px;
                     display: inline-block;
-                    min-width: 200px;
+                    min-width: 220px;
+                    font-weight: 500;
+                    color: #1e1e1e;
                 }
                 .connect-wallet-msg {
-                    color: #d9534f;
+                    color: #dc3545;
                     font-size: 1.1rem;
+                    font-weight: 600;
+                }
+                button {
+                    background-color: #000080;
+                    color: white;
+                    padding: 10px 20px;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    font-weight: 600;
+                }
+                button:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
                 }
             `}</style>
         </div>

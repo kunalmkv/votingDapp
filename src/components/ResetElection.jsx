@@ -4,10 +4,15 @@ import { WalletContext } from "../WalletContext";
 const ResetElection = () => {
     const { contract } = useContext(WalletContext);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
     const handleReset = async () => {
+        setError("");
+        setSuccess("");
+
         if (!contract) {
-            alert("Please connect your wallet first.");
+            setError("Please connect your wallet first.");
             return;
         }
 
@@ -15,11 +20,11 @@ const ResetElection = () => {
             setLoading(true);
             try {
                 const tx = await contract.resetElection();
-                await tx.wait(); // explicitly wait for blockchain confirmation
-                alert("Election reset successfully!");
+                await tx.wait();
+                setSuccess("✅ Election reset successfully!");
             } catch (error) {
                 console.error("Failed to reset election:", error);
-                alert("Failed to reset election. Check console for details.");
+                setError(error.reason ? `❌ ${error.reason}` : "❌ Failed to reset election. Check console for details.");
             } finally {
                 setLoading(false);
             }
@@ -31,10 +36,12 @@ const ResetElection = () => {
     }
 
     return (
-        <div>
+        <div className="card">
             <button onClick={handleReset} disabled={loading}>
                 {loading ? "Resetting Election..." : "🔄 Reset Election"}
             </button>
+            {error && <div className="alert alert-danger">{error}</div>}
+            {success && <div className="alert alert-success">{success}</div>}
         </div>
     );
 };

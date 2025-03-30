@@ -6,7 +6,7 @@ const VotingPeriod = () => {
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const fetchVotingPeriod = async () => {
@@ -16,19 +16,17 @@ const VotingPeriod = () => {
             }
 
             setLoading(true);
-            setError(null);
+            setError("");
 
             try {
                 const start = await contract.startTime();
                 const end = await contract.endTime();
-                console.log(start, end, "start and end times");
 
-                // Convert BigInt to Number explicitly
                 setStartTime(new Date(Number(start) * 1000));
                 setEndTime(new Date(Number(end) * 1000));
             } catch (error) {
                 console.error("Error fetching voting period:", error);
-                setError("Failed to fetch voting period. Check console for details.");
+                setError(error.reason ? `❌ ${error.reason}` : "❌ Failed to fetch voting period. Check console for details.");
             } finally {
                 setLoading(false);
             }
@@ -37,28 +35,20 @@ const VotingPeriod = () => {
         fetchVotingPeriod();
     }, [contract]);
 
-    if (error) {
-        return <p>{error}</p>;
-    }
-
-    if (loading) {
-        return <p>Loading voting period...</p>;
-    }
-
-    if (!contract) {
-        return <p>Please connect your wallet to view the voting period.</p>;
-    }
-
     return (
-        <div>
+        <div className="card">
             <h2>🗓️ Voting Period</h2>
-            {startTime && endTime ? (
+
+            {error && <div className="alert alert-danger">{error}</div>}
+            {loading && <p>Loading voting period...</p>}
+
+            {!loading && !error && startTime && endTime ? (
                 <div>
                     <p><strong>Start Time:</strong> {startTime.toLocaleString()}</p>
                     <p><strong>End Time:</strong> {endTime.toLocaleString()}</p>
                 </div>
             ) : (
-                <p>Voting period has not been set yet.</p>
+                !loading && !error && <p>Voting period has not been set yet.</p>
             )}
         </div>
     );

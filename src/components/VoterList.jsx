@@ -19,11 +19,10 @@ const VoterList = () => {
 
             try {
                 const voterList = await contract.getVoterList();
-                console.log(voterList, "voters***");
                 setVoters(voterList);
             } catch (error) {
                 console.error("Error fetching voters:", error);
-                setError("Failed to fetch voters. Check console for details.");
+                setError(error.reason ? `❌ ${error.reason}` : "❌ Failed to fetch voters. Check console for details.");
             } finally {
                 setLoading(false);
             }
@@ -32,24 +31,18 @@ const VoterList = () => {
         fetchVoters();
     }, [contract]);
 
-    if (error) {
-        return <p>{error}</p>;
-    }
-
-    if (loading) {
-        return <p>Loading voters...</p>;
-    }
-
-    if (!contract) {
-        return <p>Please connect your wallet to view the voter list.</p>;
-    }
-
     return (
-        <div>
+        <div className="card">
             <h2>Voter List</h2>
-            {voters.length === 0 ? (
+
+            {error && <div className="alert alert-danger">{error}</div>}
+            {loading && <div>Loading voters...</div>}
+
+            {!loading && !error && voters.length === 0 && (
                 <p>No voters registered yet.</p>
-            ) : (
+            )}
+
+            {!loading && !error && voters.length > 0 && (
                 <ul>
                     {voters.map((voter, index) => (
                         <li key={index}>

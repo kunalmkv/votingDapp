@@ -6,69 +6,63 @@ const SetVotingPeriod = () => {
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError("");
+        setSuccess("");
 
         if (!contract) {
-            alert("Please connect your wallet first.");
+            setError("Please connect your wallet first.");
+            setLoading(false);
             return;
         }
 
-        const start = parseInt(startTime);
-        const end = parseInt(endTime);
-
-        if (isNaN(start) || isNaN(end)) {
-            alert("Start time and End time must be valid Unix timestamps.");
+        if (parseInt(startTime) >= parseInt(endTime)) {
+            setError("End time must be greater than start time.");
+            setLoading(false);
             return;
         }
 
-        if (start >= end) {
-            alert("End time must be greater than start time.");
-            return;
-        }
-
-        setLoading(true);
         try {
-            const tx = await contract.setVotingPeriod(start, end);
-            await tx.wait(); // Explicitly await blockchain confirmation
-            alert("Voting period set successfully!");
-
-            // Reset fields after success
-            setStartTime("");
-            setEndTime("");
+            const tx = await contract.setVotingPeriod(parseInt(startTime), parseInt(endTime));
+            await tx.wait();
+            setSuccess("✅ Voting period set successfully!");
         } catch (error) {
-            console.error("Failed to set voting period:", error);
-            alert("Failed to set voting period. Check console for details.");
+            console.error("Transaction failed:", error);
+            setError(error.reason ? `❌ ${error.reason}` : "❌ Transaction failed. See console.");
         } finally {
             setLoading(false);
         }
     };
 
-    if (!contract) {
-        return <p>Please connect your wallet to set the voting period.</p>;
-    }
-
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="number"
-                placeholder="Start Time (Unix timestamp)"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                required
-            />
-            <input
-                type="number"
-                placeholder="End Time (Unix timestamp)"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                required
-            />
-            <button type="submit" disabled={loading}>
-                {loading ? "Setting Voting Period..." : "Set Voting Period"}
-            </button>
-        </form>
+        <div className="card">
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="number"
+                    placeholder="Start Time (Unix timestamp)"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    required
+                />
+                <input
+                    type="number"
+                    placeholder="End Time (Unix timestamp)"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                    required
+                />
+                <button type="submit" disabled={loading}>
+                    {loading ? "Setting Period..." : "Set Voting Period"}
+                </button>
+            </form>
+            {error && <div className="alert alert-danger">{error}</div>}
+            {success && <div className="alert alert-success">{success}</div>}
+        </div>
     );
 };
 
