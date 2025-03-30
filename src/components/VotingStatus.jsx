@@ -5,7 +5,7 @@ const VotingStatus = () => {
     const { contract } = useContext(WalletContext);
     const [status, setStatus] = useState("");
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const fetchStatus = async () => {
@@ -15,12 +15,11 @@ const VotingStatus = () => {
             }
 
             setLoading(true);
-            setError(null);
+            setError("");
 
             try {
                 let votingStatus = await contract.getVotingStatus();
-                votingStatus= Number(votingStatus);
-                console.log("votingStatus***", votingStatus);
+                votingStatus = Number(votingStatus);
                 setStatus(
                     votingStatus === 0 ? "Not Started" :
                         votingStatus === 1 ? "Started" :
@@ -28,7 +27,7 @@ const VotingStatus = () => {
                 );
             } catch (error) {
                 console.error("Error fetching voting status:", error);
-                setError("Failed to fetch voting status. Check console for details.");
+                setError(error.reason ? `❌ ${error.reason}` : "❌ Failed to fetch voting status. Check console for details.");
             } finally {
                 setLoading(false);
             }
@@ -37,22 +36,16 @@ const VotingStatus = () => {
         fetchStatus();
     }, [contract]);
 
-    if (error) {
-        return <p>{error}</p>;
-    }
-
-    if (loading) {
-        return <p>Loading voting status...</p>;
-    }
-
-    if (!contract) {
-        return <p>Please connect your wallet to view voting status.</p>;
-    }
-
     return (
-        <div>
+        <div className="card">
             <h2>Voting Status</h2>
-            <p>Current Status: <strong>{status}</strong></p>
+
+            {error && <div className="alert alert-danger">{error}</div>}
+            {loading && <p>Loading voting status...</p>}
+
+            {!loading && !error && (
+                <p>Current Status: <strong>{status}</strong></p>
+            )}
         </div>
     );
 };
