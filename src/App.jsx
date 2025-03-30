@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
 import Home from "./components/Home";
 import RegisterVoter from "./components/RegisterVoter";
 import CastVote from "./components/CastVote";
@@ -15,30 +15,31 @@ import AnnounceWinner from "./components/AnnounceWinner";
 import VotingStatus from "./components/VotingStatus";
 import UpdateCandidateLimit from "./components/UpdateCandidateLimit";
 import WithdrawFunds from "./components/WithdrawFunds";
+import VotingPeriod from "./components/VotingPeriod";
 
 const App = () => {
-    const [contract, setContract] = useState(null);
-    const [account, setAccount] = useState("");
-
     return (
         <Router>
-            <Navbar setContract={setContract} setAccount={setAccount} />
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/register-voter" element={<RegisterVoter contract={contract} />} />
-                <Route path="/cast-vote" element={<CastVote contract={contract} />} />
-                <Route path="/results" element={<Results contract={contract} />} />
-                <Route path="/register-candidate" element={<RegisterCandidate contract={contract} />} />
-                <Route path="/set-voting-period" element={<SetVotingPeriod contract={contract} />} />
-                <Route path="/emergency-stop" element={<EmergencyStop contract={contract} />} />
-                <Route path="/reset-election" element={<ResetElection contract={contract} />} />
-                <Route path="/voter-list" element={<VoterList contract={contract} />} />
-                <Route path="/candidate-list" element={<CandidateList contract={contract} />} />
-                <Route path="/announce-winner" element={<AnnounceWinner contract={contract} />} />
-                <Route path="/voting-status" element={<VotingStatus contract={contract} />} />
-                <Route path="/update-candidate-limit" element={<UpdateCandidateLimit contract={contract} />} />
-                <Route path="/withdraw-funds" element={<WithdrawFunds contract={contract} />} />
-            </Routes>
+            <Sidebar />
+            <div className="main-content">
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/register-voter" element={<RegisterVoter />} />
+                    <Route path="/cast-vote" element={<CastVote />} />
+                    <Route path="/results" element={<Results />} />
+                    <Route path="/register-candidate" element={<RegisterCandidate />} />
+                    <Route path="/set-voting-period" element={<SetVotingPeriod />} />
+                    <Route path="/emergency-stop" element={<EmergencyStop />} />
+                    <Route path="/reset-election" element={<ResetElection />} />
+                    <Route path="/voter-list" element={<VoterList />} />
+                    <Route path="/candidate-list" element={<CandidateList />} />
+                    <Route path="/announce-winner" element={<AnnounceWinner />} />
+                    <Route path="/voting-status" element={<VotingStatus />} />
+                    <Route path="/update-candidate-limit" element={<UpdateCandidateLimit />} />
+                    <Route path="/withdraw-funds" element={<WithdrawFunds />} />
+                    <Route path="/get-voting-period" element={<VotingPeriod />} />
+                </Routes>
+            </div>
         </Router>
     );
 };
