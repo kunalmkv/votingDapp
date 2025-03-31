@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import VoteABI from "./contracts/VoteABI.json";
 import axios from "axios";
 
-const contractAddress = "0xD5bF68362f838aA88e960C7C59aE70808a823E4a";
+const contractAddress = "0xA655226CFf04a6517E224c60aD502B733719564f";
 export const web3State = async () => {
     if (!window.ethereum) {
         throw new Error("MetaMask is not installed");
